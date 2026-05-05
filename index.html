@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VMware Estate Capacity Workbench</title>
+  <meta
+    name="description"
+    content="Static GitHub Pages app for sizing VMware workload capacity across HPE ProLiant hosts with N+1 and DR calculations."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <div class="masthead__copy">
+        <p class="eyebrow">Static Capacity Planning</p>
+        <h1>VMware Estate Capacity Workbench</h1>
+        <p class="intro">
+          Lightweight tooling for fast host-count estimates on GitHub Pages.
+          Start with the sizer. Add more tools later.
+        </p>
+      </div>
+      <div class="masthead__band">
+        <span>GitHub Pages ready</span>
+        <span>HPE ProLiant catalogue</span>
+        <span>N+1 and DR aware</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section id="homeView" class="view view--active" data-view="home">
+        <div class="hero-card">
+          <div>
+            <p class="eyebrow">Tool Catalogue</p>
+            <h2>Choose a planning module</h2>
+            <p>
+              The first module sizes VMware estate capacity against selected
+              host, CPU, memory, and overcommit targets. The shell is already
+              structured for more tools.
+            </p>
+          </div>
+          <div class="hero-card__numbers">
+            <div>
+              <strong>8</strong>
+              <span>HPE host families</span>
+            </div>
+            <div>
+              <strong>N+1</strong>
+              <span>Failure domain logic</span>
+            </div>
+            <div>
+              <strong>2</strong>
+              <span>Primary + DR site sizing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+          <article class="tool-card">
+            <div class="tool-card__header">
+              <span class="tool-card__index">01</span>
+              <p class="eyebrow">Available now</p>
+            </div>
+            <h3>Sizer Tool</h3>
+            <p>
+              Convert total workload demand into minimum host counts at the
+              chosen vCPU:pCPU and vMem:pMem ratios, with separate DR capacity
+              when required.
+            </p>
+            <ul class="tool-points">
+              <li>Primary and DR workload capture</li>
+              <li>Host, generation, CPU, and memory filtering</li>
+              <li>N+1 host count output per site</li>
+            </ul>
+            <button type="button" class="primary-button" data-open-view="sizer">
+              Launch Sizer
+            </button>
+          </article>
+
+          <article class="tool-card tool-card--muted">
+            <div class="tool-card__header">
+              <span class="tool-card__index">02</span>
+              <p class="eyebrow">Reserved</p>
+            </div>
+            <h3>Future Module Slot</h3>
+            <p>
+              Keep additional estate utilities in the same static shell without
+              changing the publishing model.
+            </p>
+            <div class="coming-soon">Catalog slot ready</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="sizerView" class="view" data-view="sizer">
+        <div class="view-header">
+          <div>
+            <p class="eyebrow">Module 01</p>
+            <h2>Sizer Tool</h2>
+            <p>
+              Capture the target workload, choose the host build, and calculate
+              the minimum hosts needed to survive one node loss at each site.
+            </p>
+          </div>
+          <button type="button" class="ghost-button" data-open-view="home">
+            Back to Catalogue
+          </button>
+        </div>
+
+        <div class="sizer-grid">
+          <form id="sizerForm" class="panel form-panel" novalidate>
+            <section class="form-section">
+              <div class="section-header">
+                <span class="section-number">01</span>
+                <div>
+                  <h3>Workload Inputs</h3>
+                  <p>Total workload values are treated as virtual demand.</p>
+                </div>
+              </div>
+
+              <div class="field-grid field-grid--two">
+                <label class="field">
+                  <span>Total workload cores</span>
+                  <input
+                    id="workloadCores"
+                    name="workloadCores"
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="400"
+                    required
+                  >
+                  <small>Enter total vCPU demand.</small>
+                </label>
+
+                <label class="field">
+                  <span>Total workload memory</span>
+                  <div class="input-suffix">
+                    <input
+                      id="workloadMemory"
+                      name="workloadMemory"
+                      type="number"
+                      min="1"
+                      step="1"
+                      value="2048"
+                      required
+                    >
+                    <span>GB</span>
+                  </div>
+                  <small>Enter total virtual memory demand.</small>
+                </label>
+              </div>
+
+              <div class="field">
+                <span>Dedicated DR environment</span>
+                <div class="toggle-pills" role="radiogroup" aria-label="Dedicated DR environment">
+                  <label class="toggle-pill">
+                    <input type="radio" name="hasDr" value="yes" checked>
+                    <span>Enabled</span>
+                  </label>
+                  <label class="toggle-pill">
+                    <input type="radio" name="hasDr" value="no">
+                    <span>Disabled</span>
+                  </label>
+                </div>
+                <small>
+                  If DR is enabled, blank DR values inherit the full workload
+                  values.
+                </small>
+              </div>
+
+              <fieldset id="drFieldset" class="field-group">
+                <legend>DR workload that must fail over</legend>
+                <div class="field-grid field-grid--two">
+                  <label class="field">
+                    <span>DR workload cores</span>
+                    <input
+                      id="drWorkloadCores"
+                      name="drWorkloadCores"
+                      type="number"
+                      min="1"
+                      step="1"
+                      placeholder="Blank = use total workload cores"
+                    >
+                  </label>
+
+                  <label class="field">
+                    <span>DR workload memory</span>
+                    <div class="input-suffix">
+                      <input
+                        id="drWorkloadMemory"
+                        name="drWorkloadMemory"
+                        type="number"
+                        min="1"
+                        step="1"
+                        placeholder="Blank = use total workload memory"
+                      >
+                      <span>GB</span>
+                    </div>
+                  </label>
+                </div>
+              </fieldset>
+            </section>
+
+            <section class="form-section">
+              <div class="section-header">
+                <span class="section-number">02</span>
+                <div>
+                  <h3>Host Configuration</h3>
+                  <p>Select the HPE platform, generation, CPU set, and memory size.</p>
+                </div>
+              </div>
+
+              <div class="field-grid field-grid--two">
+                <label class="field">
+                  <span>Host family</span>
+                  <select id="hostFamily" name="hostFamily"></select>
+                </label>
+
+                <label class="field">
+                  <span>Generation</span>
+                  <select id="hostGeneration" name="hostGeneration"></select>
+                </label>
+
+                <label class="field field--full">
+                  <span>CPU option</span>
+                  <select id="cpuOption" name="cpuOption"></select>
+                </label>
+
+                <label class="field field--full">
+                  <span>Memory configuration</span>
+                  <select id="memoryOption" name="memoryOption"></select>
+                  <small>
+                    Memory options are constrained by platform maximum capacity
+                    and DIMM slot population patterns.
+                  </small>
+                </label>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="section-header">
+                <span class="section-number">03</span>
+                <div>
+                  <h3>Oversubscription Targets</h3>
+                  <p>Set the planning ratios used to convert physical host capacity.</p>
+                </div>
+              </div>
+
+              <div class="field-grid field-grid--two">
+                <label class="field">
+                  <span>Desired vCPU to pCPU</span>
+                  <select id="cpuRatio" name="cpuRatio"></select>
+                </label>
+
+                <label class="field">
+                  <span>Desired vMem to pMem</span>
+                  <select id="memoryRatio" name="memoryRatio"></select>
+                </label>
+              </div>
+            </section>
+
+            <div id="errorBanner" class="error-banner" role="alert" hidden></div>
+
+            <div class="form-actions">
+              <button type="submit" class="primary-button">Calculate Host Counts</button>
+            </div>
+          </form>
+
+          <aside class="panel summary-panel">
+            <div class="summary-panel__block">
+              <p class="eyebrow">Live Summary</p>
+              <h3>Selected host build</h3>
+              <div id="selectionSummary" class="summary-copy"></div>
+            </div>
+
+            <div class="summary-panel__block">
+              <p class="eyebrow">Method</p>
+              <div class="formula-card">
+                <strong>N+1 target</strong>
+                <p>
+                  Required runtime hosts are calculated first. One extra host is
+                  then added so the site still carries the workload after a
+                  single host failure.
+                </p>
+              </div>
+            </div>
+
+            <div class="summary-panel__block">
+              <p class="eyebrow">Catalogue Note</p>
+              <p class="summary-note">
+                Hardware values are a curated starter catalogue aligned to HPE
+                QuickSpecs and product briefs. Validate the final design against
+                current vendor documentation before procurement.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <section id="resultsSection" class="panel results-panel" hidden>
+          <div class="results-panel__header">
+            <div>
+              <p class="eyebrow">Calculated Output</p>
+              <h3>Recommended host counts</h3>
+            </div>
+            <div id="resultsHeadline" class="results-headline"></div>
+          </div>
+          <div id="resultsGrid" class="results-grid"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="hardware-catalog.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
