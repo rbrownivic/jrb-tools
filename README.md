@@ -23,5 +23,5 @@ Static GitHub Pages application for VMware capacity planning.
 ## Capacity Snapshot Dashboard
 
 - The PowerShell capacity checker now exports a stable JSON snapshot to `exports/capacity-facts-latest.json`.
-- Copy that JSON into `data/capacity-facts-latest.json` in this repository to refresh the GitHub Pages dashboard.
-- Open `capacity-dashboard.html` from the site home page to view P99 CPU, memory, N+1, ready, and storage charts.
+- Open `capacity-dashboard.html` from the site home page and use `Import JSON` to load that file directly in the browser.
+- The imported file is only used client-side for visualisation. It does not need to be committed to the repository.

@@ -21,11 +21,11 @@
   <div class="page-shell">
     <header class="masthead">
       <div class="masthead__copy">
-        <p class="eyebrow">Published Capacity Facts</p>
+        <p class="eyebrow">Browser-side Visualisation</p>
         <h1>Capacity Snapshot Dashboard</h1>
         <p class="intro">
-          Static charts for the latest exported VMware capacity snapshot. Replace
-          the JSON file and GitHub Pages refreshes the published view.
+          Static charts for an exported VMware capacity snapshot. Import a local
+          JSON file in the browser and visualise it without storing the data in the repo.
         </p>
       </div>
       <div class="masthead__band">
@@ -40,24 +40,28 @@
         <div class="view-header">
           <div>
             <p class="eyebrow">Module 02</p>
-            <h2>Latest Exported Snapshot</h2>
+            <h2>Import Exported Snapshot</h2>
             <p>
-              The dashboard reads <code>data/capacity-facts-latest.json</code>
-              and turns the exported facts into charts and a raw summary table.
+              Choose the JSON exported from the PowerShell capacity checker and
+              the page will turn it into charts and a raw summary table.
             </p>
           </div>
           <div class="dashboard-actions">
             <button type="button" class="ghost-button" onclick="window.location.href='index.html'">
               Back to Catalogue
             </button>
-            <button type="button" id="refreshButton" class="primary-button">
-              Refresh Data
+            <input type="file" id="fileInput" accept=".json,application/json" hidden>
+            <button type="button" id="importButton" class="primary-button">
+              Import JSON
+            </button>
+            <button type="button" id="clearButton" class="ghost-button">
+              Clear
             </button>
           </div>
         </div>
 
         <div id="statusBanner" class="status-banner status-banner--info" role="status">
-          Loading latest exported capacity facts...
+          Select an exported JSON file to begin. The file stays in your browser session.
         </div>
 
         <div class="dashboard-grid">

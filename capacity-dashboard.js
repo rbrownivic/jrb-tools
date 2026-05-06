@@ -1,4 +1,3 @@
-const DATA_URL = 'data/capacity-facts-latest.json';
 const chartState = {
   utilization: null,
   ready: null,
@@ -16,28 +15,39 @@ const numberFormat = new Intl.NumberFormat('en-GB', {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  const refreshButton = document.getElementById('refreshButton');
-  if (refreshButton) {
-    refreshButton.addEventListener('click', loadSnapshot);
+  const importButton = document.getElementById('importButton');
+  const clearButton = document.getElementById('clearButton');
+  const fileInput = document.getElementById('fileInput');
+
+  if (importButton && fileInput) {
+    importButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async (event) => {
+      const [file] = event.target.files || [];
+      if (file) {
+        await loadSnapshotFromFile(file);
+      }
+      event.target.value = '';
+    });
   }
 
-  loadSnapshot();
+  if (clearButton) {
+    clearButton.addEventListener('click', () => {
+      renderEmpty('Import a JSON export from master capacity planner.ps1 to render the charts.');
+    });
+  }
+
+  renderEmpty('Import a JSON export from master capacity planner.ps1 to render the charts.');
 });
 
-async function loadSnapshot() {
-  setStatus('info', 'Loading latest exported capacity facts...');
-
+async function loadSnapshotFromFile(file) {
+  setStatus('info', `Loading ${file.name}...`);
   try {
-    const response = await fetch(`${DATA_URL}?ts=${Date.now()}`, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const payload = await response.json();
+    const payload = JSON.parse(await file.text());
+    payload._importFileName = file.name;
     renderDashboard(payload);
   }
   catch (error) {
-    renderEmpty(`Could not load ${DATA_URL}. ${error.message}`);
+    renderEmpty(`Could not read ${file.name}. ${error.message}`);
   }
 }
 
@@ -54,7 +64,7 @@ function renderDashboard(payload) {
 
   setStatus(
     worstReady !== null && worstReady > 5 ? 'warn' : 'ok',
-    `Showing ${rows.length} scope rows from ${payload.previousWorkingDay || 'the latest export'} for cluster ${payload.cluster || 'unknown'}.`
+    `Loaded ${payload._importFileName || 'JSON file'} with ${rows.length} scope rows from ${payload.previousWorkingDay || 'the selected export'} for cluster ${payload.cluster || 'unknown'}.`
   );
 
   renderMeta(payload, rows);
@@ -70,12 +80,12 @@ function renderEmpty(message) {
   setStatus('warn', message);
   document.getElementById('snapshotMeta').innerHTML = `
     <div class="snapshot-card">
-      <span>Upload path</span>
-      <strong>data/capacity-facts-latest.json</strong>
+      <span>Input source</span>
+      <strong>Local JSON file</strong>
     </div>
     <div class="snapshot-card">
       <span>What to do</span>
-      <strong>Export JSON from the PowerShell tool and replace the placeholder file.</strong>
+      <strong>Export JSON from the PowerShell tool, then use Import JSON on this page.</strong>
     </div>
   `;
   document.getElementById('headlineMetrics').innerHTML = '';
@@ -88,6 +98,7 @@ function renderEmpty(message) {
 
 function renderMeta(payload, rows) {
   const metaItems = [
+    ['Source file', payload._importFileName || 'N/A'],
     ['Generated', formatDate(payload.generatedAtLocal || payload.generatedAtUtc)],
     ['vCenter', payload.vcenter || 'N/A'],
     ['Cluster', payload.cluster || 'N/A'],
