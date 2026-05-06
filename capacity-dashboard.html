@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacity Snapshot Dashboard</title>
+  <meta
+    name="description"
+    content="GitHub Pages dashboard for exported VMware capacity facts with P99 utilization, N+1, ready, and storage charts."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="capacity-dashboard.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <div class="masthead__copy">
+        <p class="eyebrow">Published Capacity Facts</p>
+        <h1>Capacity Snapshot Dashboard</h1>
+        <p class="intro">
+          Static charts for the latest exported VMware capacity snapshot. Replace
+          the JSON file and GitHub Pages refreshes the published view.
+        </p>
+      </div>
+      <div class="masthead__band">
+        <span>P99 cluster views</span>
+        <span>N+1 utilisation</span>
+        <span>Storage and ready checks</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="view view--active">
+        <div class="view-header">
+          <div>
+            <p class="eyebrow">Module 02</p>
+            <h2>Latest Exported Snapshot</h2>
+            <p>
+              The dashboard reads <code>data/capacity-facts-latest.json</code>
+              and turns the exported facts into charts and a raw summary table.
+            </p>
+          </div>
+          <div class="dashboard-actions">
+            <button type="button" class="ghost-button" onclick="window.location.href='index.html'">
+              Back to Catalogue
+            </button>
+            <button type="button" id="refreshButton" class="primary-button">
+              Refresh Data
+            </button>
+          </div>
+        </div>
+
+        <div id="statusBanner" class="status-banner status-banner--info" role="status">
+          Loading latest exported capacity facts...
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel snapshot-panel">
+            <div class="section-header">
+              <span class="section-number">01</span>
+              <div>
+                <h3>Snapshot Context</h3>
+                <p>Source metadata from the exported PowerShell JSON file.</p>
+              </div>
+            </div>
+            <div id="snapshotMeta" class="snapshot-grid"></div>
+          </section>
+
+          <section class="panel spotlight-panel">
+            <div class="section-header">
+              <span class="section-number">02</span>
+              <div>
+                <h3>Cluster Headlines</h3>
+                <p>Current and worst-case indicators from the latest snapshot.</p>
+              </div>
+            </div>
+            <div id="headlineMetrics" class="spotlight-grid"></div>
+          </section>
+        </div>
+
+        <section class="panel chart-panel">
+          <div class="chart-panel__header">
+            <div>
+              <p class="eyebrow">Chart 01</p>
+              <h3>P99 Utilisation by Scope</h3>
+            </div>
+            <p class="chart-panel__copy">
+              Current versus N+1 CPU and memory utilisation for Cluster, Prod, and DR rows.
+            </p>
+          </div>
+          <div class="chart-shell chart-shell--wide">
+            <canvas id="utilizationChart"></canvas>
+          </div>
+        </section>
+
+        <div class="chart-grid">
+          <section class="panel chart-panel">
+            <div class="chart-panel__header">
+              <div>
+                <p class="eyebrow">Chart 02</p>
+                <h3>P99 CPU Ready</h3>
+              </div>
+              <p class="chart-panel__copy">Bars over 5% indicate elevated ready time.</p>
+            </div>
+            <div class="chart-shell">
+              <canvas id="readyChart"></canvas>
+            </div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="chart-panel__header">
+              <div>
+                <p class="eyebrow">Chart 03</p>
+                <h3>VM Storage Position</h3>
+              </div>
+              <p class="chart-panel__copy">Used versus provisioned VM storage per scope.</p>
+            </div>
+            <div class="chart-shell">
+              <canvas id="storageChart"></canvas>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel table-panel">
+          <div class="chart-panel__header">
+            <div>
+              <p class="eyebrow">Raw Facts</p>
+              <h3>Snapshot Table</h3>
+            </div>
+            <p class="chart-panel__copy">
+              Exact exported values for direct review or downstream reuse.
+            </p>
+          </div>
+          <div class="table-wrap">
+            <table class="facts-table">
+              <thead>
+                <tr>
+                  <th>Scope</th>
+                  <th>Site</th>
+                  <th>Hosts</th>
+                  <th>P99 CPU</th>
+                  <th>P99 Mem</th>
+                  <th>P99 CPU N+1</th>
+                  <th>P99 Mem N+1</th>
+                  <th>P99 Ready</th>
+                  <th>Used Storage</th>
+                  <th>Provisioned Storage</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="factsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="capacity-dashboard.js"></script>
+</body>
+</html>

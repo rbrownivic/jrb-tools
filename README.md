@@ -19,3 +19,9 @@ Static GitHub Pages application for VMware capacity planning.
 
 - The app is pure HTML, CSS, and JavaScript. No build step is required.
 - Hardware values are a curated planning dataset. Validate final platform choices against current HPE QuickSpecs and VMware support guidance.
+
+## Capacity Snapshot Dashboard
+
+- The PowerShell capacity checker now exports a stable JSON snapshot to `exports/capacity-facts-latest.json`.
+- Copy that JSON into `data/capacity-facts-latest.json` in this repository to refresh the GitHub Pages dashboard.
+- Open `capacity-dashboard.html` from the site home page to view P99 CPU, memory, N+1, ready, and storage charts.
