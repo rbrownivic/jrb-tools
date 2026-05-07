@@ -24,7 +24,7 @@
         <h1>VMware Estate Capacity Workbench</h1>
         <p class="intro">
           Lightweight tooling for fast host-count estimates on GitHub Pages.
-          Start with the sizer. Add more tools later.
+          Start with the sizer, then move into imported snapshot and GPO review modules.
         </p>
       </div>
       <div class="masthead__band">
@@ -56,8 +56,8 @@
               <span>Failure domain logic</span>
             </div>
             <div>
-              <strong>2</strong>
-              <span>Primary + DR site sizing</span>
+              <strong>3</strong>
+              <span>Available modules</span>
             </div>
           </div>
         </div>
@@ -101,6 +101,27 @@
             </ul>
             <button type="button" class="primary-button" onclick="window.location.href='capacity-dashboard.html'">
               Open Dashboard
+            </button>
+          </article>
+
+          <article class="tool-card">
+            <div class="tool-card__header">
+              <span class="tool-card__index">03</span>
+              <p class="eyebrow">Available now</p>
+            </div>
+            <h3>GPO Inventory Review</h3>
+            <p>
+              Import a forest-wide `gpo-inventory-*` export folder, switch between
+              domain tabs, and inspect each GPO with flattened settings, raw XML,
+              and permissions detail.
+            </p>
+            <ul class="tool-points">
+              <li>Folder validation before import</li>
+              <li>Per-domain tabs with summary stats</li>
+              <li>Wide GPO tables with expandable detail blocks</li>
+            </ul>
+            <button type="button" class="primary-button" onclick="window.location.href='gpo-inventory-review.html'">
+              Open GPO Review
             </button>
           </article>
         </div>
