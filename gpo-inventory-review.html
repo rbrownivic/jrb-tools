@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPO Inventory Review</title>
+  <meta
+    name="description"
+    content="Static GitHub Pages reviewer for exported forest-wide GPO inventory folders with per-domain tabs and per-GPO detail tables."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="capacity-dashboard.css">
+  <link rel="stylesheet" href="gpo-inventory-review.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <div class="masthead__copy">
+        <p class="eyebrow">Browser-side GPO Review</p>
+        <h1>Forest GPO Inventory Review</h1>
+        <p class="intro">
+          Import a local `gpo-inventory-*` export folder and review every domain,
+          every GPO, and the flattened settings output without uploading the data anywhere.
+        </p>
+      </div>
+      <div class="masthead__band">
+        <span>Folder import</span>
+        <span>Domain tabs</span>
+        <span>Per-GPO settings detail</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="view view--active">
+        <div class="view-header">
+          <div>
+            <p class="eyebrow">Module 03</p>
+            <h2>Import GPO Inventory Folder</h2>
+            <p>
+              Select the output folder created by `Export-ForestGpoInventory.ps1`.
+              The browser validates the folder name and reads the exported files directly.
+            </p>
+          </div>
+          <div class="inventory-actions">
+            <button type="button" class="ghost-button" onclick="window.location.href='index.html'">
+              Back to Catalogue
+            </button>
+            <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+            <button type="button" id="importButton" class="primary-button">
+              Import Folder
+            </button>
+            <button type="button" id="clearButton" class="ghost-button">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div id="statusBanner" class="status-banner status-banner--info" role="status">
+          Select the exported `gpo-inventory-*` folder. Chromium-based browsers are recommended for folder import support.
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel snapshot-panel">
+            <div class="section-header">
+              <span class="section-number">01</span>
+              <div>
+                <h3>Inventory Context</h3>
+                <p>Forest-level metadata and import validation results.</p>
+              </div>
+            </div>
+            <div id="inventoryMeta" class="snapshot-grid"></div>
+          </section>
+
+          <section class="panel spotlight-panel">
+            <div class="section-header">
+              <span class="section-number">02</span>
+              <div>
+                <h3>Review Headlines</h3>
+                <p>Quick counts for domains, GPOs, settings, permissions, and errors.</p>
+              </div>
+            </div>
+            <div id="inventoryHeadlines" class="spotlight-grid"></div>
+          </section>
+        </div>
+
+        <section class="panel domain-panel">
+          <div class="chart-panel__header">
+            <div>
+              <p class="eyebrow">Domain View</p>
+              <h3>Per-domain Tabs</h3>
+            </div>
+            <p class="chart-panel__copy">
+              Select a domain to inspect every exported GPO in that slice of the forest.
+            </p>
+          </div>
+          <div id="domainTabs" class="domain-tabs"></div>
+          <div id="domainContext" class="domain-context"></div>
+        </section>
+
+        <section class="panel table-panel">
+          <div class="chart-panel__header">
+            <div>
+              <p class="eyebrow">Detailed Review</p>
+              <h3>GPO Table</h3>
+            </div>
+            <div class="table-tools">
+              <label class="field table-filter">
+                <span>Filter current domain</span>
+                <input id="filterInput" type="search" placeholder="Search display name, owner, status, description">
+              </label>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="facts-table gpo-table">
+              <thead>
+                <tr>
+                  <th>GPO</th>
+                  <th>GUID</th>
+                  <th>Status</th>
+                  <th>Owner</th>
+                  <th>Created</th>
+                  <th>Modified</th>
+                  <th>User Version</th>
+                  <th>Computer Version</th>
+                  <th>WMI Filter</th>
+                  <th>Description</th>
+                  <th>Permissions</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="gpoTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="errorsPanel" class="panel table-panel" hidden>
+          <div class="chart-panel__header">
+            <div>
+              <p class="eyebrow">Import Warnings</p>
+              <h3>Export Errors</h3>
+            </div>
+            <p class="chart-panel__copy">
+              Errors recorded by the PowerShell exporter. These rows explain any skipped domains or GPOs.
+            </p>
+          </div>
+          <div class="table-wrap">
+            <table class="facts-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Scope</th>
+                  <th>Domain</th>
+                  <th>GPO ID</th>
+                  <th>Operation</th>
+                  <th>Error</th>
+                </tr>
+              </thead>
+              <tbody id="errorsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="gpo-inventory-review.js"></script>
+</body>
+</html>
