@@ -96,7 +96,9 @@
 }
 
 .gpo-table {
-  min-width: 1480px;
+  width: 100%;
+  min-width: 1320px;
+  table-layout: fixed;
 }
 
 .gpo-table th {
@@ -107,17 +109,58 @@
   backdrop-filter: blur(10px);
 }
 
+.gpo-table th,
 .gpo-table td {
-  max-width: 320px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  vertical-align: top;
 }
 
 .cell-wrap {
   white-space: normal;
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .cell-compact {
   white-space: nowrap;
+}
+
+.gpo-table__col--gpo {
+  width: 15rem;
+}
+
+.gpo-table__col--status {
+  width: 9rem;
+}
+
+.gpo-table__col--owner {
+  width: 12rem;
+}
+
+.gpo-table__col--date {
+  width: 9rem;
+}
+
+.gpo-table__col--version {
+  width: 12rem;
+}
+
+.gpo-table__col--wmi {
+  width: 10rem;
+}
+
+.gpo-table__col--description {
+  width: 14rem;
+}
+
+.gpo-table__col--permissions {
+  width: 8rem;
+}
+
+.gpo-table__col--details {
+  width: 22rem;
 }
 
 .permission-pill {
@@ -141,7 +184,7 @@
 }
 
 .gpo-detail {
-  min-width: 300px;
+  min-width: 0;
 }
 
 .gpo-detail summary {

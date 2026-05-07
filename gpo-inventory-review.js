@@ -328,7 +328,7 @@ function renderDomainTable() {
   if (!domain) {
     body.innerHTML = `
       <tr>
-        <td colspan="12" class="muted-copy">Import a GPO inventory folder to render the review table.</td>
+        <td colspan="11" class="muted-copy">Import a GPO inventory folder to render the review table.</td>
       </tr>
     `;
     return;
@@ -338,7 +338,7 @@ function renderDomainTable() {
   if (rows.length === 0) {
     body.innerHTML = `
       <tr>
-        <td colspan="12" class="muted-copy">No GPOs match the current filter in ${escapeHtml(domain.name)}.</td>
+        <td colspan="11" class="muted-copy">No GPOs match the current filter in ${escapeHtml(domain.name)}.</td>
       </tr>
     `;
     return;
@@ -353,7 +353,6 @@ function renderDomainTable() {
     return `
       <tr>
         <td class="cell-wrap"><strong>${escapeHtml(gpo.metadata.DisplayName || "Unnamed GPO")}</strong></td>
-        <td class="cell-compact">${escapeHtml(gpo.metadata.Id || "N/A")}</td>
         <td>${escapeHtml(formatScalar(gpo.metadata.GpoStatus))}</td>
         <td class="cell-wrap">${escapeHtml(formatScalar(gpo.metadata.Owner))}</td>
         <td class="cell-compact">${escapeHtml(formatDate(gpo.metadata.CreationTime))}</td>
@@ -516,7 +515,7 @@ function renderEmpty(message, statusKind = "info") {
   `;
   document.getElementById("gpoTableBody").innerHTML = `
     <tr>
-      <td colspan="12" class="muted-copy">${escapeHtml(message)}</td>
+      <td colspan="11" class="muted-copy">${escapeHtml(message)}</td>
     </tr>
   `;
   document.getElementById("errorsPanel").hidden = true;
@@ -659,7 +658,7 @@ function formatDate(value) {
     return "N/A";
   }
 
-  const date = new Date(value);
+  const date = parseDateValue(value);
   if (Number.isNaN(date.getTime())) {
     return String(value);
   }
@@ -671,6 +670,25 @@ function formatDate(value) {
     hour: "2-digit",
     minute: "2-digit"
   });
+}
+
+function parseDateValue(value) {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === "number") {
+    return new Date(value);
+  }
+
+  if (typeof value === "string") {
+    const microsoftDateMatch = value.match(/^\/Date\(([-+]?\d+)([-+]\d{4})?\)\/$/);
+    if (microsoftDateMatch) {
+      return new Date(Number(microsoftDateMatch[1]));
+    }
+  }
+
+  return new Date(value);
 }
 
 function formatScalar(value) {
